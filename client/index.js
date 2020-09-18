@@ -1,12 +1,32 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
+import {
+  ApolloClient,
+  ApolloProvider,
+  InMemoryCache,
+  createHttpLink,
+} from "@apollo/client";
+import { HashRouter } from "react-router-dom";
 
-const Root = () => {
-  return (
-    <div>
-      Auth Starter
-    </div>
-  );
-};
+import App from "./App";
 
-ReactDOM.render(<Root />, document.querySelector('#root'));
+const link = createHttpLink({
+  uri: "/graphql",
+  credentials: "same-origin",
+});
+
+const client = new ApolloClient({
+  uri: "http://localhost:4000/graphql",
+  cache: new InMemoryCache(),
+  link,
+});
+
+const Root = () => (
+  <ApolloProvider client={client}>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </ApolloProvider>
+);
+
+ReactDOM.render(<Root />, document.querySelector("#root"));
